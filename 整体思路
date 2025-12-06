@@ -7,6 +7,15 @@ txt_clean_rule 通过正则删除明显重复的噪声，然后手动删除部�
 build_chromadb进行数据库向量化)
 4. 调用deepseek api，让其将患者主诉，模拟成诊断学的语法，找到书中的诊断依据，多次重复进行最终结果汇总，并计算相似度 ，输出最终结果
 5. 通过文本计算相似度，制定裁决规则，让LLM通过向量数据库，选取最合适的输出(这里选取的是相似度小于0.08为强相关)
+表格流程：
+PDF → 文本	pdf_txt.py	             使用 PyMuPDF + 流式
+噪声清洗	txt_clean_rule.py	     有规则过滤
+数据分析	txt_clean_classfy.py	 词频统计
+智能切块	rag_chunk.py	         overlap + min/max
+向量生成	embedding_stream.py	     流式 embedding
+向量入库	build_chromadb.py	     Chroma 持久化
+向量检索	test_search.py	         可直接验证
+LLM 分诊	LLM_run.py	             分诊 + HyDE + RAG
 
 结果示例：
 query： 心里不舒服，并且睡不着觉
@@ -37,6 +46,7 @@ query： 我最近有点累，尤其是跑步后喘气厉害
     必须优先分诊至心血管内科进行系统评估。心理科分诊需在心血管内科等科室完成必要检查并排除器质性疾病后方可考虑。"
 
   }
+
 
 
 
